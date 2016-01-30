@@ -1,0 +1,18 @@
+{% import_yaml 'atlassian-crowd/defaults.yaml' as default_settings %}
+{% set crowd = salt['pillar.get']('atlassian-crowd', default=default_settings.get('atlassian-crowd'), merge=True) %}
+{%- from 'java/map.jinja' import java with context %}
+
+{% do crowd.update({
+  'source': crowd.get('source', '/tmp/atlassian-crowd-' ~ crowd.version ~ '.tar.gz'),
+  'download': crowd.get('download') or not crowd.get('source'),
+  'url': crowd.get('url', 'https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-' + crowd.version + '.tar.gz'),
+  'pid': crowd.dir + '/home/crowd.pid',
+  'java_home': java.jre8.home,
+  'dirs': {
+    'scripts': crowd.dir + '/scripts',
+    'home': crowd.dir + '/home',
+    'extract': crowd.dir + '/extract',
+    'install': crowd.dir + '/install',
+    'current_install': crowd.dir ~ '/extract/atlassian-crowd-' + crowd.version
+  }
+}) %}

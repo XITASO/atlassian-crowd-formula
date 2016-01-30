@@ -1,0 +1,4 @@
+atlassian-crowd:
+  ajp_port: 8009
+  proxy_name: crowd.example.com
+  http_port: 8095

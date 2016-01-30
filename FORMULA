@@ -1,0 +1,8 @@
+name: atlassian-crowd
+os: CentOS, Fedora
+os_family: RedHat
+version: 201601
+release: 1
+dependencies: java
+summary: Formula for installing Atlassian Crowd
+description: Formula for installing Atlassian Crowd
