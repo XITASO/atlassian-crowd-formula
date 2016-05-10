@@ -1,5 +1,5 @@
 atlassian-crowd:
-  version: 2.8.4
+  version: 2.9.1
   dir: /opt/atlassian/crowd
   ajp_port: 8009
   user: crowd
