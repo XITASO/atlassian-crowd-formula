@@ -2,15 +2,24 @@
 <Server port="8020" shutdown="SHUTDOWN">
 
     <Service name="Catalina">
-
 {% if config.get('http_port') %}
-        <Connector acceptCount="100" connectionTimeout="20000" disableUploadTimeout="true" enableLookups="false" maxHttpHeaderSize="8192" maxThreads="150" minSpareThreads="25" port="{{ config.http_port }}" redirectPort="8443" useBodyEncodingForURI="true" URIEncoding="UTF-8"/>
+        <Connector acceptCount="100"
+                   connectionTimeout="20000"
+                   disableUploadTimeout="true"
+                   enableLookups="false"
+                   maxHttpHeaderSize="8192"
+                   maxThreads="150"
+                   minSpareThreads="25"
+                   port="{{ config.http_port }}"
+                   redirectPort="8443"
+                   useBodyEncodingForURI="true"
+                   URIEncoding="UTF-8"
+                   compression="on"
+                   compressableMimeType="text/html,text/xml,application/xml,text/plain,text/css,application/json,application/javascript,application/x-javascript" />
 {% endif %}
-
         <Engine defaultHost="localhost" name="Catalina">
             <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true"/>
         </Engine>
-
 {% if config.get('ajp_port') %}
         <!-- To connect to an external web server (typically Apache) -->
         <!-- Define an AJP 1.3 Connector on port 8009 -->
