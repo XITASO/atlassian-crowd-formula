@@ -135,6 +135,7 @@ crowd-permission-{{ chmodfile }}:
     - name: {{ crowd.dirs.install }}/{{ chmodfile }}
     - user: {{ crowd.user }}
     - group: {{ crowd.group }}
+    - replace: False
     - require:
       - file: crowd-install
     - require_in:
