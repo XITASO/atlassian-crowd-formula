@@ -54,8 +54,8 @@ crowd-install:
   archive.extracted:
     - name: {{ crowd.dirs.extract }}
     - source: {{ crowd.source }}
-    - archive_format: tar
-    - tar_options: z
+    - options: z
+    - list_options: gzip -d -c
     - if_missing: {{ crowd.dirs.current_install }}
     - user: root
     - group: root
