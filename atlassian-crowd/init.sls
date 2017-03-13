@@ -46,8 +46,6 @@ crowd-download:
   cmd.run:
     - name: "curl -L --silent '{{ crowd.url }}' > '{{ crowd.source }}'"
     - unless: "test -f '{{ crowd.source }}'"
-    - prereq:
-      - archive: crowd-install
 {% endif %}
 
 crowd-install:
@@ -62,6 +60,7 @@ crowd-install:
     - keep: True
     - require:
       - file: crowd-extractdir
+      - cmd: crowd-download
 
   file.symlink:
     - name: {{ crowd.dirs.install }}
