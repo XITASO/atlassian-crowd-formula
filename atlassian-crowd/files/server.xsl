@@ -16,7 +16,7 @@
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <!-- Insert HTTP Connector, if missing -->
-      <xsl:if test="$pHttpPort and not(Connector[@protocol!='AJP/1.3'])">
+      <xsl:if test="$pHttpPort and not(Connector[@protocol='HTTP/1.1' or not(@protocol)])">
         <xsl:text>&#10;</xsl:text>
         <Connector protocol="HTTP/1.1"
                    acceptCount="100"
@@ -51,7 +51,7 @@
   </xsl:template>
 
   <!-- Change HTTP Port / Remove HTTP Connector -->
-  <xsl:template match="Connector[@protocol!='AJP/1.3']">
+  <xsl:template match="Connector[@protocol='HTTP/1.1' or not(@protocol)]">
     <xsl:if test="$pHttpPort">
       <xsl:copy>
         <xsl:apply-templates select="@*"/>
