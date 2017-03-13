@@ -3,6 +3,11 @@
 include:
   - java
 
+crowd-dependencies:
+  pkg.installed:
+    - pkgs:
+      - libxslt
+
 crowd:
   file.managed:
     - name: /etc/systemd/system/atlassian-crowd.service
@@ -71,15 +76,26 @@ crowd-install:
     - watch_in:
       - service: crowd
 
-crowd-serverxml:
+crowd-server-xsl:
   file.managed:
-    - name: {{ crowd.dirs.install }}/apache-tomcat/conf/server.xml
-    - source: salt://atlassian-crowd/files/server.xml
+    - name: /tmp/crowd-server.xsl
+    - source: salt://atlassian-crowd/files/server.xsl
     - template: jinja
-    - defaults:
-        config: {{ crowd }}
     - require:
       - file: crowd-install
+
+  cmd.run:
+    - name: 'xsltproc --stringparam pHttpPort "{{ crowd.get('http_port', '') }}" --stringparam pHttpScheme "{{ crowd.get('http_scheme', '') }}" --stringparam pHttpProxyName "{{ crowd.get('http_proxyName', '') }}" --stringparam pHttpProxyPort "{{ crowd.get('http_proxyPort', '') }}" --stringparam pAjpPort "{{ crowd.get('ajp_port', '') }}" -o /tmp/crowd-server.xml /tmp/crowd-server.xsl server.xml'
+    - cwd: {{ crowd.dirs.install }}/apache-tomcat/conf
+    - require:
+      - file: crowd-server-xsl
+
+crowd-server-xml:
+  file.managed:
+    - name: {{ crowd.dirs.install }}/apache-tomcat/conf/server.xml
+    - source: /tmp/crowd-server.xml
+    - require:
+      - cmd: crowd-server-xsl
     - watch_in:
       - service: crowd
 
