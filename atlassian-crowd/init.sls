@@ -54,15 +54,10 @@ crowd-download:
 {% endif %}
 
 crowd-install:
-  archive.extracted:
-    - name: {{ crowd.dirs.extract }}
-    - source: {{ crowd.source }}
-    - options: z
-    - list_options: gzip -d -c
-    - if_missing: {{ crowd.dirs.current_install }}
-    - user: root
-    - group: root
-    - keep: True
+  cmd.run:
+    - name: "tar -xf '{{ crowd.source }}'"
+    - cwd: {{ crowd.dirs.extract }}
+    - unless: "test -e '{{ crowd.dirs.current_install }}'"
     - require:
       - file: crowd-extractdir
       - cmd: crowd-download
@@ -72,7 +67,7 @@ crowd-install:
     - target: {{ crowd.dirs.current_install }}
     - require:
       - file: crowd-dir
-      - archive: crowd-install
+      - cmd: crowd-install
     - watch_in:
       - service: crowd
 
