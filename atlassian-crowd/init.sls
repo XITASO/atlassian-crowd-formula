@@ -14,7 +14,7 @@ crowd:
     - source: salt://atlassian-crowd/files/atlassian-crowd.service
     - template: jinja
     - defaults:
-        config: {{ crowd }}
+        config: {{ crowd|json }}
 
   module.wait:
     - name: service.systemctl_reload
@@ -132,7 +132,7 @@ crowd-script-{{ file }}:
     - mode: 755
     - template: jinja
     - defaults:
-        config: {{ crowd }}
+        config: {{ crowd|json }}
     - require:
       - file: crowd-scriptdir
     - watch_in:
