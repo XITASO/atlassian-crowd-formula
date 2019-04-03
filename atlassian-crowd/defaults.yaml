@@ -1,7 +1,7 @@
 atlassian-crowd:
-  version: 3.4.0
-  dir: /opt/atlassian/crowd
   ajp_port: 8009
-  user: crowd
-  group: crowd
   catalina_opts: -Xmx768m
+  dir: /opt/atlassian/crowd
+  group: crowd
+  user: crowd
+  version: 3.4.3
