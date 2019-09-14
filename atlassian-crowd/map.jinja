@@ -5,7 +5,7 @@
 {% do crowd.update({
   'source': crowd.get('source', '/tmp/atlassian-crowd-' ~ crowd.version ~ '.tar.gz'),
   'download': crowd.get('download') or not crowd.get('source'),
-  'url': crowd.get('url', 'https://www.atlassian.com/software/crowd/downloads/binary/crowd-standalone-distribution-' + crowd.version + '.tar.gz'),
+  'url': crowd.get('url', 'https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-' + crowd.version + '.tar.gz'),
   'pid': crowd.dir + '/home/crowd.pid',
   'java_home': java.jre8.home,
   'dirs': {
