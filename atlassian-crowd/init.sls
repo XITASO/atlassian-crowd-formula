@@ -46,49 +46,45 @@ crowd-graceful-down:
     - prereq:
       - file: crowd-install
 
-{% if crowd.download %}
-crowd-download:
-  cmd.run:
-    - name: "curl -L --silent '{{ crowd.url }}' > '{{ crowd.source }}'"
-    - unless: "test -f '{{ crowd.source }}'"
-{% endif %}
-
 crowd-install:
-  cmd.run:
-    - name: "tar -xf '{{ crowd.source }}'"
-    - cwd: {{ crowd.dirs.extract }}
-    - unless: "test -e '{{ crowd.dirs.current_install }}'"
+  archive.extracted:
+    - name: {{ crowd.dirs.extract }}
+    - source: {{ crowd.url }}
+    - skip_verify: True
+    - if_missing: {{ crowd.dirs.current_install }}
+    - options: z
+    - keep: True
     - require:
       - file: crowd-extractdir
-      - cmd: crowd-download
 
   file.symlink:
     - name: {{ crowd.dirs.install }}
     - target: {{ crowd.dirs.current_install }}
     - require:
       - file: crowd-dir
-      - cmd: crowd-install
+      - archive: crowd-install
     - watch_in:
       - service: crowd
 
 crowd-server-xsl:
   file.managed:
-    - name: /tmp/crowd-server.xsl
+    - name: {{ crowd.dirs.temp }}/server.xsl
     - source: salt://atlassian-crowd/files/server.xsl
     - template: jinja
     - require:
-      - file: crowd-install
+      - file: crowd-tempdir
 
   cmd.run:
-    - name: 'xsltproc --stringparam pHttpPort "{{ crowd.get('http_port', '') }}" --stringparam pHttpScheme "{{ crowd.get('http_scheme', '') }}" --stringparam pHttpProxyName "{{ crowd.get('http_proxyName', '') }}" --stringparam pHttpProxyPort "{{ crowd.get('http_proxyPort', '') }}" --stringparam pAjpPort "{{ crowd.get('ajp_port', '') }}" -o /tmp/crowd-server.xml /tmp/crowd-server.xsl server.xml'
+    - name: 'xsltproc --stringparam pHttpPort "{{ crowd.get('http_port', '') }}" --stringparam pHttpScheme "{{ crowd.get('http_scheme', '') }}" --stringparam pHttpProxyName "{{ crowd.get('http_proxyName', '') }}" --stringparam pHttpProxyPort "{{ crowd.get('http_proxyPort', '') }}" --stringparam pAjpPort "{{ crowd.get('ajp_port', '') }}" -o "{{ crowd.dirs.temp }}/server.xsl" "{{ crowd.dirs.temp }}/server.xsl" server.xml'
     - cwd: {{ crowd.dirs.install }}/apache-tomcat/conf
     - require:
+      - file: crowd-install
       - file: crowd-server-xsl
 
 crowd-server-xml:
   file.managed:
     - name: {{ crowd.dirs.install }}/apache-tomcat/conf/server.xml
-    - source: /tmp/crowd-server.xml
+    - source: {{ crowd.dirs.temp }}/server.xml
     - require:
       - cmd: crowd-server-xsl
     - watch_in:
@@ -113,6 +109,12 @@ crowd-home:
 crowd-extractdir:
   file.directory:
     - name: {{ crowd.dirs.extract }}
+    - use:
+      - file: crowd-dir
+
+crowd-tempdir:
+  file.directory:
+    - name: {{ crowd.dirs.temp }}
     - use:
       - file: crowd-dir
 
