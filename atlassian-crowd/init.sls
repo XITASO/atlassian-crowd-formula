@@ -75,7 +75,7 @@ crowd-server-xsl:
       - file: crowd-tempdir
 
   cmd.run:
-    - name: 'xsltproc --stringparam pHttpPort "{{ crowd.get('http_port', '') }}" --stringparam pHttpScheme "{{ crowd.get('http_scheme', '') }}" --stringparam pHttpProxyName "{{ crowd.get('http_proxyName', '') }}" --stringparam pHttpProxyPort "{{ crowd.get('http_proxyPort', '') }}" --stringparam pAjpPort "{{ crowd.get('ajp_port', '') }}" -o "{{ crowd.dirs.temp }}/server.xsl" "{{ crowd.dirs.temp }}/server.xsl" server.xml'
+    - name: 'xsltproc --stringparam pHttpPort "{{ crowd.get('http_port', '') }}" --stringparam pHttpScheme "{{ crowd.get('http_scheme', '') }}" --stringparam pHttpProxyName "{{ crowd.get('http_proxyName', '') }}" --stringparam pHttpProxyPort "{{ crowd.get('http_proxyPort', '') }}" --stringparam pAjpPort "{{ crowd.get('ajp_port', '') }}" -o "{{ crowd.dirs.temp }}/server.xml" "{{ crowd.dirs.temp }}/server.xsl" server.xml'
     - cwd: {{ crowd.dirs.install }}/apache-tomcat/conf
     - require:
       - file: crowd-install
