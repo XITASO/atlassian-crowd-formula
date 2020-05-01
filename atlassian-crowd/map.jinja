@@ -5,7 +5,7 @@
 {% do crowd.update({
   'url': crowd.get('url', 'https://www.atlassian.com/software/crowd/downloads/binary/atlassian-crowd-' + crowd.version + '.tar.gz'),
   'pid': crowd.dir + '/home/crowd.pid',
-  'java_home': java.jre8.home,
+  'java_home': java[java.env].home,
   'dirs': {
     'scripts': crowd.dir + '/scripts',
     'home': crowd.dir + '/home',
