@@ -4,4 +4,4 @@ atlassian-crowd:
   dir: /opt/atlassian/crowd
   group: crowd
   user: crowd
-  version: 5.1.1
+  version: 5.1.2
